@@ -1,0 +1,14 @@
+h1 {
+    color: blue;
+}
+
+#timeline {
+    height: 500px;
+    width: 500px;
+    background-color: lightgrey;
+}
+
+#submit {
+    color: white;
+    background-color: blue;
+}
