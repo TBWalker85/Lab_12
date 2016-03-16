@@ -4,26 +4,51 @@ $(document).ready(function(){
 		/*This function should create a post request using jquery. When posted it should:
 			1) Add tweets to the 'database'
 			2) After posted prepend message to list of messages and clear input box */
-            $ajax ({
-              url: '',
-              method: ‘POST’,
-              "tweet": {
-                  "name": "username",
-                  "text": "#text"
-              }
-              }).then(function(result) { 
-                  //do somthing with data 
-              });
-            // var data = {}
-            // data["text"] = $("#test").val();
-            // var url = "/post"
-            // $.post( url, data )
+            var newtweet = {};
+            newTweet.text = $('#compose').val();
+            newTweet.userName = 'user';
+            var stringified = JSON.stringify(newTweet);
+            
+            $.ajax({
+                url: '/messages',
+                method: 'POST',
+                data: stringified
+            }).then(function(result) {
+                $('#compose').val("");
+                $('#submit').prop('disabled', true);
+                $('#container').prepend(newTweet.userName +  newTweet.text);
+            });
 	}
 
 	function getData() {
 		/*This function should make a get request from 'database', parse the data and prepend each to the page*/
+        $.ajax({
+            url: '/messages',
+            method: 'GET',
+        }).then(function(result) {
+            var tweets = result.split("\n");
+            for (var i in tweets) {
+                tweets[i] = JSON.parse(tweets[i]);
+            }
+            for (var i in tweets) {
+                $('#container').prepend(tweets[i].userName + tweets[i].text);
+            }
+        });
 	}
 
 	/*Calls function once page loaded to display tweets to page*/
 	getData();
+    $('#submit').prop('disabled', true);
+    
+    $('#submit').click(function() {
+       postData(); 
+    });
+    
+    $('#compose').keyup(function() {
+       if ($('#compose').val() == "") {
+           $('#submit').prop('disabled', true);
+       } else {
+           $('#submit').prop('disabled', false);
+       }
+    });
 });
