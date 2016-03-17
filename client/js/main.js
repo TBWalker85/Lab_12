@@ -10,12 +10,11 @@ $(document).ready(function(){
             var stringified = JSON.stringify(newTweet);
             
             $.ajax({
-                url: '/messages',
+                url: 'http://localhost:3000/messages',
                 method: 'POST',
                 data: stringified
-            }).then(function(result) {
+            }).success(function(result) {
                 $('#compose').val("");
-                $('#submit').prop('disabled', true);
                 $('#container').prepend(newTweet.userName +  newTweet.text);
             });
 	}
@@ -23,7 +22,7 @@ $(document).ready(function(){
 	function getData() {
 		/*This function should make a get request from 'database', parse the data and prepend each to the page*/
         $.ajax({
-            url: '/messages',
+            url: 'http://localhost:3000/messages',
             method: 'GET',
         }).then(function(result) {
             var tweets = result.split("\n");
@@ -38,17 +37,4 @@ $(document).ready(function(){
 
 	/*Calls function once page loaded to display tweets to page*/
 	getData();
-    $('#submit').prop('disabled', true);
-    
-    $('#submit').click(function() {
-       postData(); 
-    });
-    
-    $('#compose').keyup(function() {
-       if ($('#compose').val() == "") {
-           $('#submit').prop('disabled', true);
-       } else {
-           $('#submit').prop('disabled', false);
-       }
-    });
-});
+    postData();
